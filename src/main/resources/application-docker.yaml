@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGO_URI:mongodb://mongo:27017/bank_account}
+      auto-index-creation: true

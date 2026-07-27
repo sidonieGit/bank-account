@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: bank-account
+  data:
+    mongodb:
+      auto-index-creation: false   # overridden to true in local and docker profiles
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+      show-components: always

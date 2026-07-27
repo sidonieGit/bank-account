@@ -1,0 +1,258 @@
+### Bank Account API - HTTP Request Tests
+### Base URL: http://localhost:8080/api/v1/accounts
+### Run the application before executing these requests.
+
+@baseUrl = http://localhost:8080/api/v1/accounts
+@accountId = {{createAccount.response.body.id}}
+
+
+### ─────────────────────────────────────────────
+### CREATE - POST /api/v1/accounts
+### ─────────────────────────────────────────────
+
+# @name createAccount
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "accountNumber": "FR0012345678901",
+  "ownerName": "Alice Martin",
+  "balance": 1500.00,
+  "currency": "EURO",
+  "accountType": "CHECKING"
+}
+
+###
+
+# @name createAccount_savings
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "accountNumber": "US0098765432101",
+  "ownerName": "Bob Johnson",
+  "balance": 5000.00,
+  "currency": "USD",
+  "accountType": "SAVINGS"
+}
+
+###
+
+# @name createAccount_gbp
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "accountNumber": "GB0011223344556",
+  "ownerName": "Charlie Brown",
+  "balance": 250.50,
+  "currency": "GBP",
+  "accountType": "CHECKING"
+}
+
+###
+
+# @name createAccount_invalid_number
+# Expects 400 Bad Request — accountNumber does not match pattern ^[A-Z]{2}[0-9]{10,16}$
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "accountNumber": "invalid-number",
+  "ownerName": "Eve Doe",
+  "balance": 100.00,
+  "currency": "USD",
+  "accountType": "SAVINGS"
+}
+
+###
+
+# @name createAccount_negative_balance
+# Expects 400 Bad Request — balance must be positive
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "accountNumber": "US0012345678901",
+  "ownerName": "Frank Smith",
+  "balance": -50.00,
+  "currency": "USD",
+  "accountType": "CHECKING"
+}
+
+###
+
+# @name createAccount_duplicate
+# Expects 409 Conflict — same accountNumber as first request
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "accountNumber": "FR0012345678901",
+  "ownerName": "Alice Martin",
+  "balance": 1500.00,
+  "currency": "EURO",
+  "accountType": "CHECKING"
+}
+
+
+### ─────────────────────────────────────────────
+### GET BY ID - GET /api/v1/accounts/{id}
+### ─────────────────────────────────────────────
+
+# @name getAccountById
+# Replace <ACCOUNT_ID> with an actual id returned from createAccount
+GET {{baseUrl}}/<ACCOUNT_ID>
+
+###
+
+# @name getAccountById_notFound
+# Expects 404 Not Found
+GET {{baseUrl}}/000000000000000000000000
+
+
+### ─────────────────────────────────────────────
+### LIST - GET /api/v1/accounts  (pagination + filters)
+### ─────────────────────────────────────────────
+
+# @name listAccounts_all
+GET {{baseUrl}}
+
+###
+
+# @name listAccounts_page
+GET {{baseUrl}}?page=0&size=5&sort=ownerName,asc
+
+###
+
+# @name listAccounts_filterByStatus
+GET {{baseUrl}}?status=ACTIVE
+
+###
+
+# @name listAccounts_filterByType
+GET {{baseUrl}}?accountType=SAVINGS
+
+###
+
+# @name listAccounts_filterByStatusAndType
+GET {{baseUrl}}?status=ACTIVE&accountType=CHECKING&page=0&size=10
+
+
+### ─────────────────────────────────────────────
+### FULL UPDATE - PUT /api/v1/accounts/{id}
+### ─────────────────────────────────────────────
+
+# @name updateAccount
+# Replace <ACCOUNT_ID> with an actual id
+PUT {{baseUrl}}/<ACCOUNT_ID>
+Content-Type: application/json
+
+{
+  "ownerName": "Alice Dupont",
+  "balance": 2000.00,
+  "currency": "EURO",
+  "accountType": "SAVINGS",
+  "status": "ACTIVE"
+}
+
+###
+
+# @name updateAccount_suspend
+# Replace <ACCOUNT_ID> with an actual id
+PUT {{baseUrl}}/<ACCOUNT_ID>
+Content-Type: application/json
+
+{
+  "ownerName": "Alice Dupont",
+  "balance": 2000.00,
+  "currency": "EURO",
+  "accountType": "SAVINGS",
+  "status": "SUSPENDED"
+}
+
+###
+
+# @name updateAccount_notFound
+# Expects 404 Not Found
+PUT {{baseUrl}}/000000000000000000000000
+Content-Type: application/json
+
+{
+  "ownerName": "Ghost User",
+  "balance": 0.00,
+  "currency": "USD",
+  "accountType": "CHECKING",
+  "status": "ACTIVE"
+}
+
+###
+
+# @name updateAccount_missingFields
+# Expects 400 Bad Request — required fields absent
+PUT {{baseUrl}}/<ACCOUNT_ID>
+Content-Type: application/json
+
+{
+  "balance": 100.00
+}
+
+
+### ─────────────────────────────────────────────
+### PARTIAL UPDATE - PATCH /api/v1/accounts/{id}
+### ─────────────────────────────────────────────
+
+# @name patchAccount_suspend
+# Replace <ACCOUNT_ID> with an actual id
+PATCH {{baseUrl}}/<ACCOUNT_ID>
+Content-Type: application/json
+
+{
+  "status": "SUSPENDED"
+}
+
+###
+
+# @name patchAccount_activate
+PATCH {{baseUrl}}/<ACCOUNT_ID>
+Content-Type: application/json
+
+{
+  "status": "ACTIVE"
+}
+
+###
+
+# @name patchAccount_close
+PATCH {{baseUrl}}/<ACCOUNT_ID>
+Content-Type: application/json
+
+{
+  "status": "CLOSED"
+}
+
+###
+
+# @name patchAccount_notFound
+# Expects 404 Not Found
+PATCH {{baseUrl}}/000000000000000000000000
+Content-Type: application/json
+
+{
+  "status": "ACTIVE"
+}
+
+
+### ─────────────────────────────────────────────
+### DELETE (soft) - DELETE /api/v1/accounts/{id}
+### ─────────────────────────────────────────────
+
+# @name deleteAccount
+# Replace <ACCOUNT_ID> with an actual id. Expects 204 No Content.
+DELETE {{baseUrl}}/<ACCOUNT_ID>
+
+###
+
+# @name deleteAccount_notFound
+# Expects 404 Not Found
+DELETE {{baseUrl}}/000000000000000000000000

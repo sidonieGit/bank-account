@@ -1,0 +1,11 @@
+spring:
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGO_URI}   # no default — must be injected by the platform
+      auto-index-creation: false
+
+management:
+  endpoint:
+    health:
+      show-details: never             # never leak internal topology in production
+      show-components: never
