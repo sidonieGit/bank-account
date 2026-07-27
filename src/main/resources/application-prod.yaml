@@ -1,4 +1,7 @@
 spring:
+  config:
+    activate:
+      on-profile: prod
   data:
     mongodb:
       uri: ${SPRING_DATA_MONGO_URI}   # no default — must be injected by the platform
