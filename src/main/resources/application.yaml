@@ -1,10 +1,9 @@
 spring:
   application:
     name: bank-account
-  data:
-    mongodb:
-      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/bank_account}
-      auto-index-creation: false   # overridden to true in local and docker profiles
+  mongodb:
+    uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/bank_account}
+    auto-index-creation: false   # overridden to true in local and docker profiles
 
 management:
   endpoints:
