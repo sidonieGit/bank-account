@@ -1,14 +1,11 @@
 spring:
-  config:
-    activate:
-      on-profile: prod
   data:
     mongodb:
-      uri: ${SPRING_DATA_MONGO_URI}   # no default — must be injected by the platform
+      uri: ${SPRING_DATA_MONGO_URI}   # no default — must be set on the platform (Render env var)
       auto-index-creation: false
 
 management:
   endpoint:
     health:
-      show-details: never             # never leak internal topology in production
+      show-details: never
       show-components: never
