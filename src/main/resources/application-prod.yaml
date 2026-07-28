@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: ${SPRING_DATA_MONGO_URI}   # no default — must be set on the platform (Render env var)
+      uri: ${SPRING_DATA_MONGODB_URI}   # no default — must be set on the platform (Render env var)
       auto-index-creation: false
 
 management:
