@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
@@ -34,6 +35,16 @@ public class BankAccountApplication {
 			boolean springPresent = springUri != null && !springUri.isBlank();
 			log.info("[DIAG] spring.data.mongodb.uri present={}, length={}",
 					springPresent, springPresent ? springUri.length() : 0);
+		};
+	}
+
+	@Bean
+	CommandLineRunner checkMongoProperties(MongoProperties mongoProperties) {
+		return args -> {
+			String uri = mongoProperties.getUri();
+			log.info("[DIAG] MongoProperties.getUri() present={}, length={}",
+					uri != null, uri != null ? uri.length() : 0);
+			log.info("[DIAG] MongoProperties.getHost()={}", mongoProperties.getHost());
 		};
 	}
 
