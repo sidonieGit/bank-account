@@ -1,5 +1,4 @@
 spring:
-  data:
-    mongodb:
-      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/bank_account}
-      auto-index-creation: true
+  mongodb:
+    uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/bank_account}
+    auto-index-creation: true
